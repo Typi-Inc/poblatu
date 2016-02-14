@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": "airbnb",
+  "rules": {
+    "object-curly-spacing": [1, "always"],
+    "comma-dangle": [2, "never"],
+    "react/wrap-multilines": [0],
+    "new-cap": [0],
+    "id-length": [0]
+  }
+}
