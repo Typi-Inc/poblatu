@@ -17,7 +17,7 @@
     "watch-server-start": "node node_modules/just-wait --pattern \"dist/*.js\" && npm run start",
     "watch-client": "node node_modules/webpack-dev-server/bin/webpack-dev-server --config configs/webpack.client-watch.js",
     "watch": "node node_modules/concurrently/src/main --kill-others \"npm run watch-server-start\" \"npm run watch-server\" \"npm run watch-client\"",
-    "eslint": "eslint ."
+    "eslint": "eslint . --ext .js --ext .jsx"
   },
   "dependencies": {
     "babel-polyfill": "6.5.0",
@@ -44,10 +44,11 @@
     "babel-preset-react-hmre": "1.1.0",
     "babel-preset-stage-0": "6.5.0",
     "concurrently": "1.0.0",
-    "forever": "0.15.1",
-    "eslint": "^2.0.0",
+    "eslint": "^1.10.3",
     "eslint-config-airbnb": "^5.0.1",
+    "eslint-loader": "^1.2.1",
     "eslint-plugin-react": "^3.16.1",
+    "forever": "0.15.1",
     "json-loader": "0.5.4",
     "just-wait": "1.0.3",
     "webpack": "1.12.13",

@@ -21,6 +21,9 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
   ],
   module: {
+    preLoaders: [
+      { test: /\.js?$/, loaders: ['eslint-loader'], include: path.join(__dirname, '../src') }
+    ],
     loaders: [
       { test: /\.json$/, loaders: ['json'] }
     ],

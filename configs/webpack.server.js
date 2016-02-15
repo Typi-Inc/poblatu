@@ -26,6 +26,9 @@ module.exports = {
     new webpack.DefinePlugin({ 'process.env': { NODE_ENV: '"production"' } })
   ],
   module: {
+    preLoaders: [
+      { test: /\.js?$/, loaders: ['eslint-loader'], include: path.join(__dirname, '../src') }
+    ],
     loaders: [
       { test: /\.json$/, loaders: ['json'] }
     ],

@@ -1,6 +1,16 @@
 {
+  "parser": "babel-eslint",
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "globals": {
+    "__PRODUCTION__": true,
+    "__DEV__": true,
+    "__SERVER__": true,
+    "__CLIENT__": true
   },
   "extends": "airbnb",
   "rules": {
