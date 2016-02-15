@@ -1,18 +1,17 @@
 import React from 'react'; // eslint-disable-line
-import ReactDOM from 'react-dom'; // eslint-disable-line
+import ReactDOM from 'react-dom';
 import {
   Router,
   browserHistory
 } from 'react-router';
-import Transmit from 'react-transmit';
 
-import routesContainer from 'containers/routes';
+import routes from 'containers/routes';
 
 /**
  * Fire-up React Router.
  */
 const reactRoot = window.document.getElementById('react-root');
-Transmit.render(Router, { routes: routesContainer, history: browserHistory }, reactRoot);
+ReactDOM.render(Router, { routes, history: browserHistory }, reactRoot);
 
 /**
  * Detect whether the server-side render has been discarded due to an invalid checksum.

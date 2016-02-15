@@ -1,65 +1,51 @@
 import 'babel-polyfill';
-import koa from 'koa';
-import koaStatic from 'koa-static';
+import path from 'path';
+import Express from 'express';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
 import {
-  createMemoryHistory,
   match,
   RouterContext
 } from 'react-router';
-import Transmit from 'react-transmit';
 
 import routesContainer from 'containers/routes';
 
 try {
-  const app = koa();
+  const app = new Express();
   const hostname = process.env.HOSTNAME || 'localhost';
   const port = process.env.PORT || 8000;
   let routes = routesContainer;
 
-  app.use(koaStatic('static'));
+  app.use(Express.static(path.resolve(__dirname, '..', 'static')));
 
-  app.use(function * next() {
-    yield callback => {
-      const webserver = __PRODUCTION__ ? '' : `http://${this.hostname}:8080`;
-      const location = createMemoryHistory().createLocation(this.path);
-
-      match({ routes, location }, (error, redirectLocation, renderProps) => {
-        if (redirectLocation) {
-          this.redirect(redirectLocation.pathname + redirectLocation.search, '/');
-          return;
-        }
-
-        if (error || !renderProps) {
-          callback(error);
-          return;
-        }
-
-        Transmit.renderToString(RouterContext, renderProps).then(({ reactString, reactData }) => {
-          const template = (
-            `<!doctype html>
-            <html lang="en-us">
-              <head>
-                <meta charset="utf-8">
-                <title>react-isomorphic-starterkit</title>
-                <link rel="shortcut icon" href="/favicon.ico">
-              </head>
-              <body>
-                <div id="react-root">${reactString}</div>
-              </body>
-            </html>`
-          );
-
-          this.type = 'text/html';
-          this.body = Transmit.injectIntoMarkup(
-						template,
-						reactData,
-						[`${webserver}/dist/client.js`]
-					);
-
-          callback(null);
-        });
-      });
-    };
+  app.use((req, res) => {
+    match({ routes, location: req.originalUrl }, (error, redirectLocation, renderProps) => {
+      if (redirectLocation) {
+        res.redirect(redirectLocation.pathname + redirectLocation.search, '/');
+      } else if (error) {
+        console.error('ROUTER ERROR:', error);
+        res.status(500);
+        // hydrateOnClient(); // TODO what does that mean?
+      } else if (renderProps) {
+        const reactString = renderToString(<RouterContext {...renderProps} />);
+        const body = (
+          `<!doctype html>
+          <html lang="en-us">
+          <head>
+          <meta charset="utf-8">
+          <title>react-isomorphic-starterkit</title>
+          <link rel="shortcut icon" href="/favicon.ico">
+          </head>
+          <body>
+          <div id="react-root">${reactString}</div>
+          </body>
+          </html>`
+        );
+        res.status(200).send(body);
+      } else {
+        res.status(404).send('Not found');
+      }
+    });
   });
 
   app.listen(port, () => {
