@@ -8,13 +8,13 @@ import {
   RouterContext
 } from 'react-router';
 
-import routesContainer from 'containers/routes';
+import routesNotHot from './containers/routes';
+let routes = routesNotHot;
 
 try {
   const app = new Express();
   const hostname = process.env.HOSTNAME || 'localhost';
   const port = process.env.PORT || 8000;
-  let routes = routesContainer;
 
   app.use(Express.static(path.resolve(__dirname, '..', 'static')));
 
@@ -53,20 +53,18 @@ try {
     console.info(`==> 🌎  Go to http://${hostname}:${port}`);
   });
 
-  if (__DEV__) {
-    if (module.hot) {
-      console.log('[HMR] Waiting for server-side updates');
+  if (__DEV__ && module.hot) {
+    console.log('[HMR] Waiting for server-side updates');
 
-      module.hot.accept('containers/routes', () => {
-        routes = require('containers/routes');
-      });
+    module.hot.accept('./containers/routes', () => {
+      routes = require('./containers/routes');
+    });
 
-      module.hot.addStatusHandler((status) => {
-        if (status === 'abort') {
-          setTimeout(() => process.exit(0), 0);
-        }
-      });
-    }
+    module.hot.addStatusHandler((status) => {
+      if (status === 'abort') {
+        setTimeout(() => process.exit(0), 0);
+      }
+    });
   }
 } catch (error) {
   console.error(error.stack || error);

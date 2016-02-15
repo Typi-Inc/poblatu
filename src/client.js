@@ -5,7 +5,7 @@ import {
   browserHistory
 } from 'react-router';
 
-import routes from 'containers/routes';
+import routes from './containers/routes';
 
 /**
  * Fire-up React Router.
