@@ -1,9 +1,6 @@
-import babelPolyfill from 'babel-polyfill'; // eslint-disable-line
+import 'babel-polyfill';
 import koa from 'koa';
-import koaProxy from 'koa-proxy';
 import koaStatic from 'koa-static';
-import React from 'react'; // eslint-disable-line
-import ReactDOM from 'react-dom/server'; // eslint-disable-line
 import {
   createMemoryHistory,
   match,
@@ -11,7 +8,6 @@ import {
 } from 'react-router';
 import Transmit from 'react-transmit';
 
-import githubApi from 'apis/github';
 import routesContainer from 'containers/routes';
 
 try {
@@ -22,15 +18,9 @@ try {
 
   app.use(koaStatic('static'));
 
-  app.use(koaProxy({
-    host: githubApi.url,
-    match: /^\/api\/github\//i,
-    map: (path) => path.replace(/^\/api\/github\//i, '/')
-  }));
-
-  app.use(function *(next) { // eslint-disable-line
+  app.use(function * next() {
     yield callback => {
-      const webserver = __PRODUCTION__ ? '' : `//${this.hostname}:8080`;
+      const webserver = __PRODUCTION__ ? '' : `http://${this.hostname}:8080`;
       const location = createMemoryHistory().createLocation(this.path);
 
       match({ routes, location }, (error, redirectLocation, renderProps) => {
@@ -74,7 +64,7 @@ try {
 
   app.listen(port, () => {
     console.info('==> ✅  Server is listening');
-    console.info('==> 🌎  Go to http://%s:%s', hostname, port);
+    console.info(`==> 🌎  Go to http://${hostname}:${port}`);
   });
 
   if (__DEV__) {

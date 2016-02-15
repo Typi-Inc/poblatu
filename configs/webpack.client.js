@@ -22,7 +22,7 @@ module.exports = {
   ],
   module: {
     preLoaders: [
-      { test: /\.js?$/, loaders: ['eslint-loader'], include: path.join(__dirname, '../src') }
+      { test: /\.js?$/, loaders: ['eslint'], include: path.join(__dirname, '../src') }
     ],
     loaders: [
       { test: /\.json$/, loaders: ['json'] }
@@ -39,6 +39,9 @@ module.exports = {
       'web_modules'
     ],
     extensions: ['', '.json', '.js']
+  },
+  eslint: {
+    failOnError: true
   },
   node: {
     __dirname: true,
